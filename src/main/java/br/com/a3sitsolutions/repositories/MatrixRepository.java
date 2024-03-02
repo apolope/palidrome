@@ -1,6 +1,8 @@
 package br.com.a3sitsolutions.repositories;
 
+import br.com.a3sitsolutions.exceptions.NotFoundException;
 import br.com.a3sitsolutions.models.Matrix;
+import br.com.a3sitsolutions.utils.Messages;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntityBase;
 import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoRepository;
 import io.smallrye.mutiny.Uni;
@@ -24,6 +26,6 @@ public class MatrixRepository implements ReactivePanacheMongoRepository<Matrix> 
     }
 
     public Uni<Matrix> findByMatrixId(ObjectId id) {
-        return findById(id);
+        return findById(id).onFailure().transform(e -> new NotFoundException(Messages.NOT_FOUND_ID, id.toString()));
     }
 }

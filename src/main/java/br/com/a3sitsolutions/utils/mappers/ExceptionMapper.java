@@ -1,18 +1,18 @@
 package br.com.a3sitsolutions.utils.mappers;
 
-import br.com.a3sitsolutions.exceptions.SaveException;
+import br.com.a3sitsolutions.exceptions.BaseHttpException;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class SaveExceptionMapper implements ExceptionMapper<SaveException> {
+public class ExceptionMapper implements jakarta.ws.rs.ext.ExceptionMapper<BaseHttpException> {
+
     @Override
-    public Response toResponse(SaveException exception) {
-        ErrorMessage errorMessage = new ErrorMessage(exception.getMessage(), exception.httpStatusCode.code());
+    public Response toResponse(BaseHttpException exception) {
+        ErrorMessage errorMessage = new ErrorMessage(exception.getMessage(), exception.getHttpStatusCode().code());
 
         return Response
-                .status(exception.httpStatusCode.code())
+                .status(exception.getHttpStatusCode().code())
                 .entity(errorMessage)
                 .build();
     }

@@ -18,4 +18,10 @@ public interface MatrixService {
 
 
     Boolean checkMatrixLength(MatrixDTO matrix);
+
+    Boolean checkMatrixRowLenght(MatrixDTO matrix);
+
+    Integer minLength();
+
+    Integer maxLength();
 }

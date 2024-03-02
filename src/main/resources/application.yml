@@ -22,4 +22,8 @@ quarkus:
       generation: drop-and-create
 
 feature-flag:
-  matrix-length: 10
+  matrix-length:
+    min: 5
+    max: 10
+  palindrome-length:
+    min: 4

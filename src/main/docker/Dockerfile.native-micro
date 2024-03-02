@@ -10,11 +10,11 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native-micro -t quarkus/palidrome .
+# docker build -f src/main/docker/Dockerfile.native-micro -t quarkus/palindrome .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/palidrome
+# docker run -i --rm -p 8080:8080 quarkus/palindrome
 #
 ###
 FROM quay.io/quarkus/quarkus-micro-image:2.0
