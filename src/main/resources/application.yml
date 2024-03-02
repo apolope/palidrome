@@ -1,0 +1,25 @@
+quarkus:
+  mongodb:
+    database: palindrome
+
+  datasource:
+    mongodb:
+      uri: mongodb://10.0.0.67:27017
+      collections:
+        - palindrome
+
+  rest-client:
+    org.acme.rest.client.ExtensionsService:
+      url: https://stage.code.quarkus.io/api
+
+  log:
+    category:
+      "io.quarkus.category":
+        level: INFO
+
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+
+feature-flag:
+  matrix-length: 10
