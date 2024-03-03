@@ -4,7 +4,6 @@ import br.com.a3sitsolutions.models.Matrix;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
-
 import java.util.List;
 
 @Data
@@ -12,7 +11,6 @@ import java.util.List;
 public class MatrixDTO {
 
     private ObjectId id;
-
     private List<List<Character>> matrix;
 
     public MatrixDTO(Matrix matrix) {

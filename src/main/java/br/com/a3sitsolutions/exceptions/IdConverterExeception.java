@@ -1,6 +1,6 @@
 package br.com.a3sitsolutions.exceptions;
 
-import br.com.a3sitsolutions.utils.Messages;
+import br.com.a3sitsolutions.utils.MessagesUtil;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
 public class IdConverterExeception extends BaseHttpException {
@@ -12,15 +12,15 @@ public class IdConverterExeception extends BaseHttpException {
         super(message, httpStatusCode);
     }
 
-    public IdConverterExeception(HttpResponseStatus httpStatusCode, Messages messageEnum) {
+    public IdConverterExeception(HttpResponseStatus httpStatusCode, MessagesUtil messageEnum) {
         super(httpStatusCode, messageEnum);
     }
 
-    public IdConverterExeception(HttpResponseStatus httpStatusCode, Messages messageEnum, String... args) {
+    public IdConverterExeception(HttpResponseStatus httpStatusCode, MessagesUtil messageEnum, String... args) {
         super(httpStatusCode, messageEnum, args);
     }
 
-    public IdConverterExeception(Messages message, String id) {
+    public IdConverterExeception(MessagesUtil message, String id) {
         super(HttpResponseStatus.NOT_FOUND, message, new String[]{id});
     }
 }

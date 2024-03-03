@@ -4,7 +4,7 @@ import br.com.a3sitsolutions.dtos.MatrixDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Palindrome {
+public class PalindromeUtil {
 
     public static List<String> findPalindromes(MatrixDTO matrix, Integer minLen) {
         List<String> palindromes = new ArrayList<>();

@@ -4,12 +4,13 @@ import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.exceptions.IdConverterExeception;
 import br.com.a3sitsolutions.exceptions.NotFoundException;
 import br.com.a3sitsolutions.exceptions.SaveException;
+import br.com.a3sitsolutions.models.Matrix;
 import br.com.a3sitsolutions.repositories.MatrixRepository;
 import br.com.a3sitsolutions.services.MatrixService;
-import br.com.a3sitsolutions.utils.Matrix;
-import br.com.a3sitsolutions.utils.Messages;
+import br.com.a3sitsolutions.services.PalindromeService;
+import br.com.a3sitsolutions.utils.MatrixUtil;
+import br.com.a3sitsolutions.utils.MessagesUtil;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.unchecked.Unchecked;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
@@ -29,6 +30,9 @@ public class MatrixServiceImpl implements MatrixService {
     @Inject
     MatrixRepository matrixRepository;
 
+    @Inject
+    PalindromeService palindromeService;
+
     @Override
     public Uni<List<MatrixDTO>> getMatrices() {
         return matrixRepository.listAll().onItem().transform(matrices -> {
@@ -37,21 +41,21 @@ public class MatrixServiceImpl implements MatrixService {
     }
 
     @Override
-    public Uni<MatrixDTO> saveOrUpdate(MatrixDTO matrixDTO) throws SaveException {
-
-        if (!checkMatrixLength(matrixDTO)) {
-            throw new SaveException(Messages.formatLengthProblemMessage(MATRIX_MIN_LENGTH,MATRIX_MAX_LENGTH));
+    public Uni<MatrixDTO> saveOrUpdate(MatrixDTO matrixDTO) {
+        if (!checkMatrixLength(matrixDTO) || !checkMatrixRowLenght(matrixDTO)) {
+            return Uni.createFrom().failure(new SaveException(MessagesUtil.formatLengthProblemMessage(MATRIX_MIN_LENGTH, MATRIX_MAX_LENGTH)));
         }
 
-        if (!checkMatrixRowLenght(matrixDTO)) {
-            throw new SaveException(Messages.formatRowLengthProblemMessage(matrixDTO.getMatrix().get(0).size()));
-        }
+        // Assume que MatrixDTO.toEntity() está correto
+        Matrix matrix = matrixDTO.toEntity();
 
-        return matrixRepository.persistOrUpdate(matrixDTO.toEntity())
-                .onItem().transform(MatrixDTO::new)
-                .onFailure().call(Unchecked.supplier(() -> {
-                    throw new SaveException();
-                }));
+        return matrixRepository.persistOrUpdate(matrix)
+                .onItem().transformToUni(savedMatrix -> {
+                    matrixDTO.setId(savedMatrix.getId());
+                    return palindromeService.savePalindromes(matrixDTO)
+                            .onItem().transform(ignored -> new MatrixDTO(savedMatrix)); // Transforma de volta para MatrixDTO
+                })
+                .onFailure().recoverWithUni(failure -> Uni.createFrom().failure(new SaveException()));
     }
 
     @Override
@@ -62,12 +66,12 @@ public class MatrixServiceImpl implements MatrixService {
         try {
             oId = new ObjectId(id);
         } catch (Exception e) {
-            throw new IdConverterExeception(Messages.ID_CONVERTER_PROBLEM, id);
+            throw new IdConverterExeception(MessagesUtil.ID_CONVERTER_PROBLEM, id);
         }
 
         Uni<MatrixDTO> matrix = matrixRepository.findByMatrixId(oId)
                 .onItem().ifNotNull().transform(MatrixDTO::new)
-                .onFailure().transform(e -> new NotFoundException(Messages.NOT_FOUND_ID, id));
+                .onFailure().transform(e -> new NotFoundException(MessagesUtil.NOT_FOUND_ID, id));
 
         return matrix;
     }
@@ -79,12 +83,12 @@ public class MatrixServiceImpl implements MatrixService {
 
     @Override
     public Boolean checkMatrixLength(MatrixDTO matrix) {
-        return Matrix.checkMatrixLength(matrix, MATRIX_MIN_LENGTH, MATRIX_MAX_LENGTH);
+        return MatrixUtil.checkMatrixLength(matrix, MATRIX_MIN_LENGTH, MATRIX_MAX_LENGTH);
     }
 
     @Override
     public Boolean checkMatrixRowLenght(MatrixDTO matrix) {
-        return Matrix.checkMatrixRowLenght(matrix);
+        return MatrixUtil.checkMatrixRowLenght(matrix);
     }
 
     /**

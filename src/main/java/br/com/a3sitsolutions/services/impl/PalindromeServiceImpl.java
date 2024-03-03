@@ -1,18 +1,23 @@
 package br.com.a3sitsolutions.services.impl;
 
 import br.com.a3sitsolutions.dtos.MatrixDTO;
-import br.com.a3sitsolutions.exceptions.NotFoundException;
+import br.com.a3sitsolutions.dtos.PalindromeDTO;
+import br.com.a3sitsolutions.exceptions.SaveException;
+import br.com.a3sitsolutions.models.Matrix;
+import br.com.a3sitsolutions.models.Palindrome;
+import br.com.a3sitsolutions.repositories.PalindromeRepository;
 import br.com.a3sitsolutions.services.MatrixService;
 import br.com.a3sitsolutions.services.PalindromeService;
-import br.com.a3sitsolutions.utils.Matrix;
-import br.com.a3sitsolutions.utils.Messages;
+import br.com.a3sitsolutions.utils.MatrixUtil;
+import br.com.a3sitsolutions.utils.MessagesUtil;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import java.util.ArrayList;
 import java.util.List;
-import static br.com.a3sitsolutions.utils.Palindrome.findPalindromes;
+import java.util.stream.Collectors;
+import static br.com.a3sitsolutions.utils.PalindromeUtil.findPalindromes;
 
 @ApplicationScoped
 public class PalindromeServiceImpl implements PalindromeService {
@@ -21,29 +26,72 @@ public class PalindromeServiceImpl implements PalindromeService {
     Integer PALINDROME_MIN_LENGTH;
 
     @Inject
+    PalindromeRepository repo;
+
+    @Inject
     MatrixService matrixService;
 
     @Override
-    public Uni<List<String>> getPalindromesByMatrixId(String id) {
-        return matrixService.getMatrix(id)
-                .onItem().transformToUni(matrix -> {
-                    if (matrix != null) {
-                        return Uni.createFrom().item(getPalindromesByMatrix(matrix));
-                    } else {
-                        return Uni.createFrom().failure(new NotFoundException(Messages.NOT_FOUND_ID, id));
-                    }
-                })
-                .onFailure().recoverWithUni(failure -> Uni.createFrom().failure(new NotFoundException(Messages.NOT_FOUND_ID, id)));
+    public Uni<List<PalindromeDTO>> getPalindromes(String q) {
+        if (q != null) {
+            return repo.findPalindromesByQuery(q).onItem().transform(palindromes -> {
+                return palindromes.stream().map(PalindromeDTO::new).collect(Collectors.toList());
+            });
+        } else {
+            return repo.listAll()
+                    .onItem().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new).collect(Collectors.toList()));
+        }
     }
 
     @Override
-    public List<String> getPalindromesByMatrix(MatrixDTO matrix) {
-        List<String> palindromes = new ArrayList<>();
+    public Uni<List<PalindromeDTO>> getPalindromesByMatrixId(String id) {
+        return repo.findPalindromeByMatrixId(id).onItem().transform(palindromes -> {
+            return palindromes.stream().map(PalindromeDTO::new).collect(Collectors.toList());
+        });
+    }
 
-        if (Matrix.isValideMatrix(matrix, matrixService.minLength(), matrixService.maxLength())) {
-            palindromes = findPalindromes(matrix, PALINDROME_MIN_LENGTH);
+    @Override
+    public Uni<List<String>> getPalindromesByMatrix(MatrixDTO matrixDTO) {
+        if (!MatrixUtil.isValideMatrix(matrixDTO, matrixService.minLength(), matrixService.maxLength())) {
+            return Uni.createFrom().item(new ArrayList<>());
         }
 
-        return palindromes;
+        Matrix matrix = matrixDTO.toEntity();
+
+        return matrixService.saveOrUpdate(matrix.of())
+                .onItem().transformToUni(savedMatrix -> {
+                    List<Uni<Void>> saveOperations = new ArrayList<>();
+                    for (String word : findPalindromes(matrixDTO, PALINDROME_MIN_LENGTH)) {
+                        Palindrome palindrome = new Palindrome();
+                        palindrome.setPalindrome(word);
+                        palindrome.setMatrix(matrix.getId());
+                        saveOperations.add(repo.saveOrUpdateByMatrixId(palindrome).replaceWithVoid());
+                    }
+                    return Uni.combine().all().unis(saveOperations).discardItems()
+                            .onItem().transform(ignored -> findPalindromes(matrixDTO, PALINDROME_MIN_LENGTH));
+                });
+    }
+
+    @Override
+    public Uni<PalindromeDTO> savePalindrome(PalindromeDTO palindrome) {
+        return repo.saveOrUpdateByMatrixId(palindrome.toEntity()).onItem().transform(PalindromeDTO::new).onFailure().transform(e -> new SaveException());
+    }
+
+    @Override
+    public Uni<Void> savePalindromes(MatrixDTO matrixDTO) {
+        if (!MatrixUtil.isValideMatrix(matrixDTO, matrixService.minLength(), matrixService.maxLength())) {
+            return Uni.createFrom().failure(new SaveException(MessagesUtil.formatLengthProblemMessage(matrixService.minLength(), matrixService.maxLength())));
+        }
+
+        List<Uni<Void>> saveOperations = findPalindromes(matrixDTO, PALINDROME_MIN_LENGTH).stream()
+                .map(word -> {
+                    Palindrome palindrome = new Palindrome();
+                    palindrome.setPalindrome(word);
+                    palindrome.setMatrix(matrixDTO.getId());
+                    return repo.persistOrUpdate(palindrome).replaceWithVoid();
+                })
+                .collect(Collectors.toList());
+
+        return Uni.combine().all().unis(saveOperations).discardItems();
     }
 }

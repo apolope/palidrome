@@ -3,7 +3,7 @@ package br.com.a3sitsolutions.utils;
 import br.com.a3sitsolutions.dtos.MatrixDTO;
 import java.util.List;
 
-public class Matrix {
+public class MatrixUtil {
 
     public static Boolean checkMatrixLength(MatrixDTO matrix, Integer minLen, Integer maxLen) {
         return matrix.getMatrix().size() >= minLen && matrix.getMatrix().size() <= maxLen;

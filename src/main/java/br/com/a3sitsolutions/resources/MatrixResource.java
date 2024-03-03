@@ -2,6 +2,7 @@ package br.com.a3sitsolutions.resources;
 
 import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.services.MatrixService;
+import io.smallrye.common.constraint.NotNull;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -25,26 +26,31 @@ public class MatrixResource {
     }
 
     @POST
-    public Uni<MatrixDTO> save(MatrixDTO matrixDTO) {
+    public Uni<MatrixDTO> save(
+            @NotNull MatrixDTO matrixDTO) {
         return service.saveOrUpdate(matrixDTO);
     }
 
     @GET
     @Path("/{id}")
-    public Uni<MatrixDTO> getMatrix(@PathParam("id") String id) {
+    public Uni<MatrixDTO> getMatrix(
+            @PathParam("id") String id) {
         return service.getMatrix(id);
     }
 
     @PUT
     @Path("/{id}")
-    public Uni<MatrixDTO> updateMatrix(@PathParam("id") String id, MatrixDTO matrixDTO) {
+    public Uni<MatrixDTO> updateMatrix(
+            @PathParam("id") String id,
+            @NotNull MatrixDTO matrixDTO) {
         matrixDTO.setId(new ObjectId(id));
         return service.saveOrUpdate(matrixDTO);
     }
 
     @DELETE
     @Path("/{id}")
-    public Uni<Boolean> deleteMatrix(@PathParam("id") String id) {
+    public Uni<Boolean> deleteMatrix(
+            @PathParam("id") String id) {
         return service.deleteMatrix(id);
     }
 }
