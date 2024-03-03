@@ -1,6 +1,7 @@
 package br.com.a3sitsolutions.services.impl;
 
 import br.com.a3sitsolutions.dtos.MatrixDTO;
+import br.com.a3sitsolutions.exceptions.DeleteException;
 import br.com.a3sitsolutions.exceptions.IdConverterExeception;
 import br.com.a3sitsolutions.exceptions.NotFoundException;
 import br.com.a3sitsolutions.exceptions.SaveException;
@@ -78,7 +79,23 @@ public class MatrixServiceImpl implements MatrixService {
 
     @Override
     public Uni<Boolean> deleteMatrix(String id) {
-        return matrixRepository.deleteById(new ObjectId(id));
+        ObjectId matrixId;
+        try {
+            matrixId = new ObjectId(id);
+        } catch (IllegalArgumentException e) {
+            return Uni.createFrom().failure(new IdConverterExeception(MessagesUtil.ID_CONVERTER_PROBLEM, id));
+        }
+
+        return matrixRepository.findById(matrixId)
+                .onItem().ifNotNull().transformToUni(matrix ->
+                        matrixRepository.deleteById(matrixId)
+                                .onItem().transform(deleted -> Boolean.TRUE)
+                                .onFailure().recoverWithItem(Boolean.FALSE)
+                )
+                .onItem().ifNull().continueWith(Boolean.FALSE)
+                .onFailure().recoverWithUni(failure ->
+                        Uni.createFrom().failure(new DeleteException(MessagesUtil.DELETE_PROBLEM, id))
+                );
     }
 
     @Override

@@ -16,7 +16,6 @@ public interface MatrixService {
 
     Uni<Boolean> deleteMatrix(String id);
 
-
     Boolean checkMatrixLength(MatrixDTO matrix);
 
     Boolean checkMatrixRowLenght(MatrixDTO matrix);
