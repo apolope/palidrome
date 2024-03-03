@@ -2,6 +2,7 @@ package br.com.a3sitsolutions.services.impl;
 
 import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.dtos.PalindromeDTO;
+import br.com.a3sitsolutions.exceptions.DeleteException;
 import br.com.a3sitsolutions.exceptions.SaveException;
 import br.com.a3sitsolutions.models.Matrix;
 import br.com.a3sitsolutions.models.Palindrome;
@@ -13,6 +14,7 @@ import br.com.a3sitsolutions.utils.MessagesUtil;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,5 +95,14 @@ public class PalindromeServiceImpl implements PalindromeService {
                 .collect(Collectors.toList());
 
         return Uni.combine().all().unis(saveOperations).discardItems();
+    }
+
+    @Override
+    public Uni<Boolean> deleteByMatrixId(ObjectId matrixId) {
+        return repo.delete("matrix", matrixId)
+                .onItem().transform(deletedCount -> deletedCount > 0)
+                .onFailure().recoverWithItem(Boolean.FALSE)
+                .onFailure().recoverWithUni(failure ->
+                        Uni.createFrom().failure(new DeleteException(MessagesUtil.PALINDROME_DELETE_PROBLEM, matrixId.toHexString())));
     }
 }

@@ -86,15 +86,18 @@ public class MatrixServiceImpl implements MatrixService {
             return Uni.createFrom().failure(new IdConverterExeception(MessagesUtil.ID_CONVERTER_PROBLEM, id));
         }
 
-        return matrixRepository.findById(matrixId)
-                .onItem().ifNotNull().transformToUni(matrix ->
-                        matrixRepository.deleteById(matrixId)
-                                .onItem().transform(deleted -> Boolean.TRUE)
-                                .onFailure().recoverWithItem(Boolean.FALSE)
-                )
-                .onItem().ifNull().continueWith(Boolean.FALSE)
+        return matrixRepository.deleteById(matrixId)
+                .onItem().transformToUni(deleted -> {
+                    if (Boolean.TRUE.equals(deleted)) {
+                        return palindromeService.deleteByMatrixId(matrixId)
+                                .onItem().transform(deletedPalindromes -> Boolean.TRUE)
+                                .onFailure().recoverWithItem(Boolean.FALSE);
+                    } else {
+                        return Uni.createFrom().item(Boolean.FALSE);
+                    }
+                })
                 .onFailure().recoverWithUni(failure ->
-                        Uni.createFrom().failure(new DeleteException(MessagesUtil.DELETE_PROBLEM, id))
+                        Uni.createFrom().failure(new DeleteException(MessagesUtil.MATRIX_DELETE_PROBLEM, id))
                 );
     }
 

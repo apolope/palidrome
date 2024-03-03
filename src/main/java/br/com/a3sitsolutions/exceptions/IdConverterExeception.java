@@ -21,6 +21,6 @@ public class IdConverterExeception extends BaseHttpException {
     }
 
     public IdConverterExeception(MessagesUtil message, String id) {
-        super(HttpResponseStatus.NOT_FOUND, message, new String[]{id});
+        super(HttpResponseStatus.BAD_REQUEST, message, new String[]{id});
     }
 }

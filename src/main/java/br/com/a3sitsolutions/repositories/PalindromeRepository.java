@@ -28,4 +28,8 @@ public class PalindromeRepository implements ReactivePanacheMongoRepository<Pali
         String regexPattern = ".*" + q + ".*";
         return find("{'palindrome': {$regex: ?1, $options: 'i'}}", regexPattern).list();
     }
+
+    public Uni<Long> deleteByMatrixId(ObjectId matrixId) {
+        return delete("matrix", matrixId);
+    }
 }

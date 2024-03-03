@@ -6,7 +6,8 @@ public enum MessagesUtil {
 
     BUNDLE("http_messages"),
     SAVE_PROBLEM("save.problem"),
-    DELETE_PROBLEM("delete.problem"),
+    MATRIX_DELETE_PROBLEM("matrix.delete.problem"),
+    PALINDROME_DELETE_PROBLEM("palindrome.delete.problem"),
     LENGTH_PROBLEM("length.problem"),
     LENGTH_ROW_PROBLEM("length.row.problem"),
     NOT_FOUND("not.found"),
