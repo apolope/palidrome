@@ -10,12 +10,6 @@ public abstract class BaseHttpException extends RuntimeException {
     protected HttpResponseStatus httpStatusCode;
     protected String detailMessage;
 
-    public BaseHttpException(String message, HttpResponseStatus httpStatusCode, Throwable throwable) {
-        super(message, throwable);
-        this.message = message;
-        this.httpStatusCode = httpStatusCode;
-    }
-
     public BaseHttpException(String message, HttpResponseStatus httpStatusCode) {
         super(message);
         this.message = message;
@@ -30,12 +24,6 @@ public abstract class BaseHttpException extends RuntimeException {
 
     public BaseHttpException(HttpResponseStatus httpStatusCode, MessagesUtil messageEnum, String... args) {
         super(messageEnum.getMessage(args));
-        this.message = messageEnum.getMessage(args);
-        this.httpStatusCode = httpStatusCode;
-    }
-
-    public BaseHttpException(HttpResponseStatus httpStatusCode, MessagesUtil messageEnum, Throwable detailMessage, String... args) {
-        super(messageEnum.getMessage(args), detailMessage, true, true);
         this.message = messageEnum.getMessage(args);
         this.httpStatusCode = httpStatusCode;
     }

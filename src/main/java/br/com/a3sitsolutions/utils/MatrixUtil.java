@@ -18,7 +18,4 @@ public class MatrixUtil {
         return true;
     }
 
-    public static Boolean isValideMatrix(MatrixDTO matrix, Integer minLen, Integer maxLen) {
-        return  checkMatrixLength(matrix, minLen, maxLen) && checkMatrixRowLenght(matrix);
-    }
 }

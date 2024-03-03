@@ -15,16 +15,6 @@ import java.util.List;
 @ApplicationScoped
 public class MatrixRepository implements ReactivePanacheMongoRepository<Matrix> {
 
-    public Uni<List<Matrix>> getAllMatrices() {
-        return listAll()
-                .ifNoItem()
-                .after(Duration.ofMillis(10000))
-                .fail()
-                .onFailure()
-                .recoverWithUni(Uni.createFrom().<List<ReactivePanacheMongoEntityBase>>item(Collections.EMPTY_LIST));
-
-    }
-
     public Uni<Matrix> findByMatrixId(ObjectId id) {
         return findById(id)
                 .onItem().ifNull().fail()

@@ -24,10 +24,6 @@ public class PalindromeRepository implements ReactivePanacheMongoRepository<Pali
         return findPalindromesByQueryAndMatrixId(q, null);
     }
 
-    public Uni<Long> deleteByMatrixId(ObjectId matrixId) {
-        return delete("matrix", matrixId);
-    }
-
     public Uni<List<Palindrome>> findPalindromesByQueryAndMatrixId(String q, String matrixId) {
         ObjectId matrixObjectId;
 

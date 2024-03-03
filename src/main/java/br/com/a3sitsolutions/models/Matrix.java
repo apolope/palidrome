@@ -6,7 +6,6 @@ import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bson.types.ObjectId;
-
 import java.util.List;
 
 @Data
