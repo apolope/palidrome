@@ -43,8 +43,12 @@ public class MatrixServiceImpl implements MatrixService {
 
     @Override
     public Uni<MatrixDTO> saveOrUpdate(MatrixDTO matrixDTO) {
-        if (!checkMatrixLength(matrixDTO) || !checkMatrixRowLenght(matrixDTO)) {
+        if (!checkMatrixLength(matrixDTO)) {
             return Uni.createFrom().failure(new SaveException(MessagesUtil.formatLengthProblemMessage(MATRIX_MIN_LENGTH, MATRIX_MAX_LENGTH)));
+        }
+
+        if (matrixDTO.getMatrix() != null && !checkMatrixRowLenght(matrixDTO)) {
+            return Uni.createFrom().failure(new SaveException(MessagesUtil.formatRowLengthProblemMessage(matrixDTO.getMatrix().get(0).size())));
         }
 
         Matrix matrix = matrixDTO.toEntity();

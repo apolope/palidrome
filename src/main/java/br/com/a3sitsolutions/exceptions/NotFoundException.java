@@ -25,4 +25,8 @@ public class NotFoundException extends BaseHttpException {
         super(HttpResponseStatus.NOT_FOUND, messageEnum, detailMessage, args);
     }
 
+    public NotFoundException(MessagesUtil messageEnum) {
+        super(HttpResponseStatus.NOT_FOUND, messageEnum);
+    }
+
 }

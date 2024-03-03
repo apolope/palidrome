@@ -17,4 +17,7 @@ public class SaveException extends BaseHttpException {
         super(message, HttpResponseStatus.BAD_REQUEST, throwable);
     }
 
+    public SaveException(MessagesUtil messageEnum) {
+        super(HttpResponseStatus.BAD_REQUEST, messageEnum);
+    }
 }

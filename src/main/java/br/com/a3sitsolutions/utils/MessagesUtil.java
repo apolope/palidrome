@@ -12,7 +12,8 @@ public enum MessagesUtil {
     LENGTH_ROW_PROBLEM("length.row.problem"),
     NOT_FOUND("not.found"),
     NOT_FOUND_ID("not.found.id"),
-    ID_CONVERTER_PROBLEM("id.converter.problem");
+    ID_CONVERTER_PROBLEM("id.converter.problem"),
+    EMPTY_PALINDROME_CONTENT("empty.palindrome.content");
 
     private final String code;
 
