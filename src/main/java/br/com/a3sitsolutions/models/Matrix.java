@@ -9,7 +9,7 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @MongoEntity(collection = "matrix")
 public class Matrix extends ReactivePanacheMongoEntity {
 

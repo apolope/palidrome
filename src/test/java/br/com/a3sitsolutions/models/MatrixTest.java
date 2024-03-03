@@ -47,9 +47,9 @@ class MatrixTest {
         assertNotNull(result);
         assertTrue(
                 result.contains("A") &&
-                result.contains("B") &&
-                result.contains("C") &&
-                result.contains("D"));
+                        result.contains("B") &&
+                        result.contains("C") &&
+                        result.contains("D"));
     }
 
     @Test
