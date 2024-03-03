@@ -1,4 +1,4 @@
-package br.com.a3sitsolutions.Utils;
+package br.com.a3sitsolutions.utils;
 
 import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.models.Matrix;

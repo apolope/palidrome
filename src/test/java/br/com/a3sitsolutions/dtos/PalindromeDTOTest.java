@@ -1,6 +1,6 @@
 package br.com.a3sitsolutions.dtos;
 
-import br.com.a3sitsolutions.Utils.Factory;
+import br.com.a3sitsolutions.utils.Factory;
 import br.com.a3sitsolutions.models.Palindrome;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

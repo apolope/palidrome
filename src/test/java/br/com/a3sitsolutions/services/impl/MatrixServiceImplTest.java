@@ -1,6 +1,6 @@
 package br.com.a3sitsolutions.services.impl;
 
-import br.com.a3sitsolutions.Utils.Factory;
+import br.com.a3sitsolutions.utils.Factory;
 import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.exceptions.NotFoundException;
 import br.com.a3sitsolutions.exceptions.SaveException;
