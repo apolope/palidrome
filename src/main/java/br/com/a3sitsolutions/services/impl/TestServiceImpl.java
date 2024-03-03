@@ -2,7 +2,6 @@ package br.com.a3sitsolutions.services.impl;
 
 import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.dtos.PalindromeDTO;
-import br.com.a3sitsolutions.exceptions.SaveException;
 import br.com.a3sitsolutions.services.MatrixService;
 import br.com.a3sitsolutions.services.PalindromeService;
 import br.com.a3sitsolutions.services.TestService;
