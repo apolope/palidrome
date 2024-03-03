@@ -47,14 +47,13 @@ public class MatrixServiceImpl implements MatrixService {
             return Uni.createFrom().failure(new SaveException(MessagesUtil.formatLengthProblemMessage(MATRIX_MIN_LENGTH, MATRIX_MAX_LENGTH)));
         }
 
-        // Assume que MatrixDTO.toEntity() está correto
         Matrix matrix = matrixDTO.toEntity();
 
         return matrixRepository.persistOrUpdate(matrix)
                 .onItem().transformToUni(savedMatrix -> {
                     matrixDTO.setId(savedMatrix.getId());
                     return palindromeService.savePalindromes(matrixDTO)
-                            .onItem().transform(ignored -> new MatrixDTO(savedMatrix)); // Transforma de volta para MatrixDTO
+                            .onItem().transform(ignored -> new MatrixDTO(savedMatrix));
                 })
                 .onFailure().recoverWithUni(failure -> Uni.createFrom().failure(new SaveException()));
     }
@@ -111,17 +110,11 @@ public class MatrixServiceImpl implements MatrixService {
         return MatrixUtil.checkMatrixRowLenght(matrix);
     }
 
-    /**
-     * @return
-     */
     @Override
     public Integer minLength() {
         return MATRIX_MIN_LENGTH;
     }
 
-    /**
-     * @return
-     */
     @Override
     public Integer maxLength() {
         return MATRIX_MAX_LENGTH;
