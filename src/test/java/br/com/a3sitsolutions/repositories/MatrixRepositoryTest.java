@@ -21,7 +21,7 @@ class MatrixRepositoryTest {
 
     @Test
     void findByMatrixId() {
-        Matrix matrix = factory.matrixFactory().await().indefinitely();
+        Matrix matrix = factory.matrixUniFactory().await().indefinitely();
         assertNotNull(matrix);
 
         Mockito.when(matrixRepository.findByMatrixId(matrix.getId()))

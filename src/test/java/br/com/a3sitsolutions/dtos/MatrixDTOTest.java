@@ -18,7 +18,7 @@ class MatrixDTOTest {
     @Test
     void toEntity() {
         ObjectId id = new ObjectId();
-        List<List<Character>> matrixData = factory.matrixDataFactory();
+        List<List<Character>> matrixData = factory.matrixDataFactoryValid();
 
         MatrixDTO dto = new MatrixDTO();
         dto.setId(id);
@@ -42,7 +42,7 @@ class MatrixDTOTest {
 
     @Test
     void getSetMatrix() {
-        List<List<Character>> matrixData = factory.matrixDataFactory();
+        List<List<Character>> matrixData = factory.matrixDataFactoryValid();
         MatrixDTO dto = new MatrixDTO();
         dto.setMatrix(matrixData);
 
@@ -53,7 +53,7 @@ class MatrixDTOTest {
     void testEquals() {
         MatrixDTO dto1 = new MatrixDTO();
         dto1.setId(new ObjectId());
-        dto1.setMatrix(factory.matrixDataFactory());
+        dto1.setMatrix(factory.matrixDataFactoryValid());
 
         MatrixDTO dto2 = new MatrixDTO();
         dto2.setId(dto1.getId());
@@ -67,7 +67,7 @@ class MatrixDTOTest {
     void testToString() {
         MatrixDTO dto = new MatrixDTO();
         dto.setId(new ObjectId());
-        dto.setMatrix(factory.matrixDataFactory());
+        dto.setMatrix(factory.matrixDataFactoryValid());
 
         assertNotNull(dto.toString());
     }

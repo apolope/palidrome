@@ -1,5 +1,6 @@
 package br.com.a3sitsolutions.Utils;
 
+import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.models.Matrix;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Singleton;
@@ -10,17 +11,32 @@ import java.util.Random;
 @Singleton
 public class Factory {
 
-    public Uni<Matrix> matrixFactory() {
+    public Uni<Matrix> matrixUniFactory() {
         Matrix matrix = new Matrix();
 
         matrix.setId(new ObjectId());
 
-        matrix.setMatrix(List.of(
-                List.of('A', 'B', 'C'),
-                List.of('D', 'E', 'F'),
-                List.of('G', 'H', 'I')));
+        matrix.setMatrix(matrixDataFactoryValid());
 
         return Uni.createFrom().item(matrix);
+    }
+
+    public Matrix matrixFactoryEntity() {
+        Matrix matrix = new Matrix();
+
+        matrix.setId(new ObjectId());
+        matrix.setMatrix(matrixDataFactoryValid());
+
+        return matrix;
+    }
+
+    public MatrixDTO matrixFactoryDTO() {
+        MatrixDTO matrix = new MatrixDTO();
+
+        matrix.setId(new ObjectId());
+        matrix.setMatrix(matrixDataFactoryValid());
+
+        return matrix;
     }
 
     public String palindromeFactory() {
@@ -38,5 +54,20 @@ public class Factory {
         );
 
         return palindromes.get(new Random().nextInt(palindromes.size()));
+    }
+
+    public List<List<Character>> matrixDataFactoryValid() {
+        return List.of(List.of('A', 'B', 'C', 'D', 'E', 'F'),
+                List.of('G', 'H', 'I', 'J', 'K', 'L'),
+                List.of('M', 'N', 'O', 'P', 'Q', 'R'),
+                List.of('S', 'T', 'U', 'V', 'W', 'X'),
+                List.of('Y', 'Z', 'A', 'B', 'C', 'D'),
+                List.of('E', 'F', 'G', 'H', 'I', 'J'));
+    }
+
+    public List<List<Character>> matrixDataFactoryInvalid() {
+        return List.of(List.of('A', 'B', 'C'),
+                List.of('D', 'E', 'F'),
+                List.of('G', 'H', 'I'));
     }
 }
