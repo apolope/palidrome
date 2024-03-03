@@ -26,6 +26,8 @@ public class MatrixRepository implements ReactivePanacheMongoRepository<Matrix> 
     }
 
     public Uni<Matrix> findByMatrixId(ObjectId id) {
-        return findById(id).onFailure().transform(e -> new NotFoundException(MessagesUtil.NOT_FOUND_ID, id.toString()));
+        return findById(id)
+                .onItem().ifNull().fail()
+                .onFailure().transform(e -> new NotFoundException(MessagesUtil.NOT_FOUND_ID, id.toString()));
     }
 }
