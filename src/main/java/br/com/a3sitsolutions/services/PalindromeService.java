@@ -21,6 +21,15 @@ public interface PalindromeService {
     Uni<List<PalindromeDTO>> getPalindromes(String q);
 
     /**
+     * Retrieves a list of PalindromeDTOs that match a given query string and matrix id.
+     *
+     * @param q The query string to search for within palindromes.
+     * @param matrixId The id of the matrix to retrieve associated palindromes.
+     * @return A Uni that emits a list of PalindromeDTOs matching the query and matrix id.
+     */
+    Uni<List<PalindromeDTO>> getPalindromes(String q, String matrixId);
+
+    /**
      * Retrieves all PalindromeDTOs associated with a specific matrix ID.
      *
      * @param id The unique identifier of the matrix to retrieve associated palindromes.

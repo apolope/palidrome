@@ -45,6 +45,14 @@ public class PalindromeServiceImpl implements PalindromeService {
     }
 
     @Override
+    public Uni<List<PalindromeDTO>> getPalindromes(String q, String matrixId) {
+        return repo.findPalindromesByQueryAndMatrixId(q, matrixId)
+                .onItem().ifNull().fail()
+                .onItem().ifNotNull().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new).collect(Collectors.toList()))
+                .onFailure().transform(e -> new NotFoundException(MessagesUtil.NOT_FOUND_ID, matrixId));
+    }
+
+    @Override
     public Uni<List<PalindromeDTO>> getPalindromesByMatrixId(String id) {
         return matrixService.getMatrix(id)
                 .onItem().transformToUni(matrixDTO -> {

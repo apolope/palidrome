@@ -25,9 +25,15 @@ public class TestServiceImpl implements TestService {
         return matrixService.saveOrUpdate(matrixDTO)
                 .onItem().transformToUni(savedMatrixDTO -> {
                     return palindromeService.getPalindromesByMatrixId(savedMatrixDTO.getId().toString());
-                })
-                .onFailure().recoverWithUni(failure -> {
-                    return Uni.createFrom().failure(new SaveException());
                 });
+    }
+
+    @Override
+    public Uni<List<PalindromeDTO>> getPalindromes(String q, String matrixId) {
+        if (matrixId != null) {
+            return palindromeService.getPalindromes(q, matrixId);
+        } else {
+            return palindromeService.getPalindromes(q);
+        }
     }
 }
