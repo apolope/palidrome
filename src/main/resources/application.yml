@@ -1,16 +1,13 @@
 quarkus:
   mongodb:
     database: palindrome
+    connection-string: mongodb://mongodb-palindrome:27017
 
   datasource:
     mongodb:
-      uri: mongodb://mongodb:27017
+      uri: mongodb://mongodb-palindrome:27017
       collections:
         - palindrome
-
-  rest-client:
-    org.acme.rest.client.ExtensionsService:
-      url: https://stage.code.quarkus.io/api
 
   log:
     category:

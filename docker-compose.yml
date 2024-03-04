@@ -1,0 +1,28 @@
+version: "3.5"
+
+services:
+  palindrome:
+    build:
+      context: ./
+      dockerfile: src/main/docker/Dockerfile.jvm
+    image: a3s/palindrome
+    container_name: palindrome-application
+    ports:
+      - "8082:8082"
+    networks:
+      - palindrome-network
+
+  mongodb-palindrome:
+    container_name: mongodb-palindrome
+    image: mongo:4.4.5
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./db:/data/db
+    restart: always
+    networks:
+      - palindrome-network
+
+networks:
+  palindrome-network:
+    driver: bridge
