@@ -1,9 +1,30 @@
-# Palinndrome
+# Palindrome
 Projeto Caça-palíndromo, atendendo aos requisitos solicitados como abaixo:
 - Desenvolva uma API rest com dois endpoints.
   - Os dois endpoints solicitado com o path de contexto ```/test```
-    - Obtain Palindromes POST
-    - Search Palindromes GET
+    ```bash
+    curl --location 'http://localhost:8082/test' \
+    --header 'Accept-Language: pt-BR' \
+    --header 'Content-Type: application/json' \
+    --data '{
+    "matrix": [
+    ["A", "O", "S", "S", "O"],
+    ["Y", "R", "Z", "X", "L"],
+    ["J", "S", "A", "P", "M"],
+    ["J", "K", "P", "R", "Z"],
+    ["Y", "L", "E", "R", "A"]
+    ]
+    }'
+    ```
+    > - header: [Accept-Language] internationalization language [Content-Type] content type
+    > - data: [JSON] MatrixDTO.class
+  - Search Palindromes GET
+    ```bash
+    curl --location 'http://localhost:8082/test?q=AR&matrixId=65e50ebfe34221200e7100bc' \
+    --header 'Accept-Language: pt-BR'
+    ```
+    >   - header: [Accept-Language] internationalization language
+    >   - query-params: [q] string to query filter
   - Foram desenvolvido os endpoints de CRUD para as matrizes com o path de contexto ```/matrix```
     - Save Matrix POST
     - Get All Matrix
