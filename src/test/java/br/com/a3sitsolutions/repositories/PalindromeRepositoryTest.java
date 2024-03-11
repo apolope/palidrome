@@ -6,7 +6,6 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import java.util.Collections;
@@ -28,16 +27,16 @@ class PalindromeRepositoryTest {
     void findPalindromeByMatrixId() {
         String palindromeRandom = factory.palindromeFactory();
 
-        ObjectId matrixId = new ObjectId();
+        Long matrixId = 1L;
         Palindrome expectedPalindrome = new Palindrome();
         expectedPalindrome.setPalindrome(palindromeRandom);
         expectedPalindrome.setMatrix(matrixId);
         List<Palindrome> expectedList = Collections.singletonList(expectedPalindrome);
 
-        Mockito.when(palindromeRepository.findPalindromeByMatrixId(anyString()))
+        Mockito.when(palindromeRepository.findPalindromeByMatrixId(anyLong()))
                 .thenAnswer(invocation -> Uni.createFrom().item(expectedList));
 
-        Uni<List<Palindrome>> resultUni = palindromeRepository.findPalindromeByMatrixId(matrixId.toString());
+        Uni<List<Palindrome>> resultUni = palindromeRepository.findPalindromeByMatrixId(matrixId);
 
         List<Palindrome> result = resultUni.await().indefinitely();
         assertEquals(expectedList.size(), result.size());
@@ -49,9 +48,9 @@ class PalindromeRepositoryTest {
         String palindromeRandom = factory.palindromeFactory();
 
         Palindrome expectedPalindrome = new Palindrome();
-        expectedPalindrome.setId(new ObjectId());
+        expectedPalindrome.setId(1L);
         expectedPalindrome.setPalindrome(palindromeRandom);
-        expectedPalindrome.setMatrix(new ObjectId());
+        expectedPalindrome.setMatrix(1L);
 
         Mockito.when(palindromeRepository.findPalindromesByQuery(anyString()))
                 .thenAnswer(invocation -> {
@@ -69,24 +68,23 @@ class PalindromeRepositoryTest {
     void findPalindromesByQueryAndMatrixId() {
         String palindromeRandom = factory.palindromeFactory();
 
-        ObjectId matrixId = new ObjectId();
         Palindrome expectedPalindrome = new Palindrome();
-        expectedPalindrome.setId(new ObjectId());
+        expectedPalindrome.setId(1L);
         expectedPalindrome.setPalindrome(palindromeRandom);
-        expectedPalindrome.setMatrix(matrixId);
+        expectedPalindrome.setMatrix(1L);
 
-        Mockito.when(palindromeRepository.findPalindromesByQueryAndMatrixId(anyString(), eq(matrixId.toHexString())))
+        Mockito.when(palindromeRepository.findPalindromesByQueryAndMatrixId(anyString(), eq(1L)))
                 .thenAnswer(invocation -> {
                     String query = invocation.getArgument(0, String.class);
-                    String id = invocation.getArgument(1, String.class);
-                    if (palindromeRandom.equals(query) && matrixId.toHexString().equals(id)) {
+                    Long id = invocation.getArgument(1, Long.class);
+                    if (palindromeRandom.equals(query) && 1L == id) {
                         return Uni.createFrom().item(List.of(expectedPalindrome));
                     } else {
                         return Uni.createFrom().item(List.of());
                     }
                 });
 
-        Uni<List<Palindrome>> resultUni = palindromeRepository.findPalindromesByQueryAndMatrixId(palindromeRandom, matrixId.toHexString());
+        Uni<List<Palindrome>> resultUni = palindromeRepository.findPalindromesByQueryAndMatrixId(palindromeRandom, 1L);
 
         List<Palindrome> result = resultUni.await().indefinitely();
         assertFalse(result.isEmpty());

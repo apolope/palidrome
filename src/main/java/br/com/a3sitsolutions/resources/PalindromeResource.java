@@ -98,7 +98,7 @@ public class PalindromeResource {
                     description = "The unique identifier of the matrix to retrieve associated palindromes.",
                     required = true,
                     example = "5fcb1234"
-            ) @PathParam("id") String id
+            ) @PathParam("id") Long id
     ) {
         return palindromeService.getPalindromesByMatrixId(id);
     }

@@ -4,7 +4,6 @@ import br.com.a3sitsolutions.utils.Factory;
 import br.com.a3sitsolutions.models.Palindrome;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,30 +15,27 @@ class PalindromeDTOTest {
 
     @Test
     void toEntity() {
-        ObjectId id = new ObjectId();
         String palindromeStr = factory.palindromeFactory();
-        ObjectId matrixId = new ObjectId();
 
         PalindromeDTO dto = new PalindromeDTO();
-        dto.setId(id);
+        dto.setId(1L);
         dto.setPalindrome(palindromeStr);
-        dto.setMatrix(matrixId);
+        dto.setMatrix(1L);
 
         Palindrome entity = dto.toEntity();
 
         assertNotNull(entity);
-        assertEquals(id, entity.getId());
+        assertEquals(1L, entity.getId());
         assertEquals(palindromeStr, entity.getPalindrome());
-        assertEquals(matrixId, entity.getMatrix());
+        assertEquals(1L, entity.getMatrix());
     }
 
     @Test
     void getSetId() {
-        ObjectId id = new ObjectId();
         PalindromeDTO dto = new PalindromeDTO();
-        dto.setId(id);
+        dto.setId(1L);
 
-        assertEquals(id, dto.getId());
+        assertEquals(1L, dto.getId());
     }
 
     @Test
@@ -53,19 +49,18 @@ class PalindromeDTOTest {
 
     @Test
     void getSetMatrix() {
-        ObjectId matrixId = new ObjectId();
         PalindromeDTO dto = new PalindromeDTO();
-        dto.setMatrix(matrixId);
+        dto.setMatrix(1L);
 
-        assertEquals(matrixId, dto.getMatrix());
+        assertEquals(1L, dto.getMatrix());
     }
 
     @Test
     void testEquals() {
         PalindromeDTO dto1 = new PalindromeDTO();
-        dto1.setId(new ObjectId());
+        dto1.setId(1L);
         dto1.setPalindrome(factory.palindromeFactory());
-        dto1.setMatrix(new ObjectId());
+        dto1.setMatrix(1L);
 
         PalindromeDTO dto2 = new PalindromeDTO();
         dto2.setId(dto1.getId());
@@ -79,9 +74,9 @@ class PalindromeDTOTest {
     @Test
     void testToString() {
         PalindromeDTO dto = new PalindromeDTO();
-        dto.setId(new ObjectId());
+        dto.setId(1L);
         dto.setPalindrome(factory.palindromeFactory());
-        dto.setMatrix(new ObjectId());
+        dto.setMatrix(1L);
 
         assertNotNull(dto.toString());
     }

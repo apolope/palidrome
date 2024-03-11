@@ -36,7 +36,7 @@ public interface MatrixService {
      * @return A Uni that emits the MatrixDTO representing the matrix with the specified ID,
      *         or fail with exception.
      */
-    Uni<MatrixDTO> getMatrix(String id);
+    Uni<MatrixDTO> getMatrix(Long id);
 
     /**
      * Deletes a matrix by its unique identifier.
@@ -44,7 +44,7 @@ public interface MatrixService {
      * @param id The unique ID of the matrix to be deleted.
      * @return A Uni<Boolean> that emits true if the matrix was successfully deleted, or fail with exception.
      */
-    Uni<Boolean> deleteMatrix(String id);
+    Uni<Boolean> deleteMatrix(Long id);
 
     /**
      * Validates the overall dimensions of the matrix against predefined minimum and maximum lengths.

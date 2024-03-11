@@ -1,16 +1,27 @@
 package br.com.a3sitsolutions.models;
 
-import io.quarkus.mongodb.panache.common.MongoEntity;
+import br.com.a3sitsolutions.dtos.PalindromeDTO;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.bson.types.ObjectId;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@MongoEntity(collection = "palindrome")
-public class Palindrome {
+@Entity
+public class Palindrome extends PanacheEntityBase {
 
-    public ObjectId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String palindrome;
-    private ObjectId matrix;
+    private Long matrix;
+
+    public PalindromeDTO of() {
+        return new PalindromeDTO(this);
+    }
 }

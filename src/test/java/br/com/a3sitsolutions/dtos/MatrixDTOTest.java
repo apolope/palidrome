@@ -4,7 +4,6 @@ import br.com.a3sitsolutions.utils.Factory;
 import br.com.a3sitsolutions.models.Matrix;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,27 +16,25 @@ class MatrixDTOTest {
 
     @Test
     void toEntity() {
-        ObjectId id = new ObjectId();
         List<List<Character>> matrixData = factory.matrixDataFactoryValid();
 
         MatrixDTO dto = new MatrixDTO();
-        dto.setId(id);
+        dto.setId(1L);
         dto.setMatrix(matrixData);
 
         Matrix entity = dto.toEntity();
 
         assertNotNull(entity);
-        assertEquals(id, entity.getId());
+        assertEquals(1L, entity.getId());
         assertEquals(matrixData, entity.getMatrix());
     }
 
     @Test
     void getSetId() {
-        ObjectId id = new ObjectId();
         MatrixDTO dto = new MatrixDTO();
-        dto.setId(id);
+        dto.setId(1L);
 
-        assertEquals(id, dto.getId());
+        assertEquals(1L, dto.getId());
     }
 
     @Test
@@ -52,7 +49,7 @@ class MatrixDTOTest {
     @Test
     void testEquals() {
         MatrixDTO dto1 = new MatrixDTO();
-        dto1.setId(new ObjectId());
+        dto1.setId(1L);
         dto1.setMatrix(factory.matrixDataFactoryValid());
 
         MatrixDTO dto2 = new MatrixDTO();
@@ -66,7 +63,7 @@ class MatrixDTOTest {
     @Test
     void testToString() {
         MatrixDTO dto = new MatrixDTO();
-        dto.setId(new ObjectId());
+        dto.setId(1L);
         dto.setMatrix(factory.matrixDataFactoryValid());
 
         assertNotNull(dto.toString());

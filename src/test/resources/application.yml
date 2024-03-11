@@ -4,7 +4,7 @@ quarkus:
 
   datasource:
     mongodb:
-      uri: mongodb://mongodb:27017
+      uri: mongodb://10.0.0.67:27017
       collections:
         - palindrome
 

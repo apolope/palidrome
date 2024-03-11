@@ -1,22 +1,29 @@
 package br.com.a3sitsolutions.repositories;
 
-import br.com.a3sitsolutions.exceptions.IdConverterExeception;
 import br.com.a3sitsolutions.models.Palindrome;
-import br.com.a3sitsolutions.utils.MessagesUtil;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoRepository;
+import io.quarkus.hibernate.reactive.panache.Panache;
+import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.bson.types.ObjectId;
 import java.util.List;
 
 @ApplicationScoped
-public class PalindromeRepository implements ReactivePanacheMongoRepository<Palindrome> {
+public class PalindromeRepository implements PanacheRepositoryBase<Palindrome, Long> {
 
     public Uni<Palindrome> saveOrUpdateByMatrixId(Palindrome palindrome) {
-        return persistOrUpdate(palindrome);
+        if (palindrome.getId() == null) {
+            return Panache.withTransaction(() -> persist(palindrome)).replaceWith(palindrome);
+        } else {
+            return Panache.withTransaction(() -> findById(palindrome.getId())
+                    .onItem().ifNotNull().transform(entity -> {
+                        return entity;
+                    })
+                    .onItem().ifNull().fail()
+            );
+        }
     }
 
-    public Uni<List<Palindrome>> findPalindromeByMatrixId(String id) {
+    public Uni<List<Palindrome>> findPalindromeByMatrixId(Long id) {
         return findPalindromesByQueryAndMatrixId(null, id);
     }
 
@@ -24,39 +31,22 @@ public class PalindromeRepository implements ReactivePanacheMongoRepository<Pali
         return findPalindromesByQueryAndMatrixId(q, null);
     }
 
-    public Uni<List<Palindrome>> findPalindromesByQueryAndMatrixId(String q, String matrixId) {
-        ObjectId matrixObjectId;
-
+    public Uni<List<Palindrome>> findPalindromesByQueryAndMatrixId(String q, Long matrixId) {
         if (matrixId != null) {
-            matrixObjectId = getObjectId(matrixId);
-
-            if (matrixObjectId == null) {
-                return Uni.createFrom().failure(new IdConverterExeception(MessagesUtil.ID_CONVERTER_PROBLEM, matrixId));
-            }
-
             if (q == null) {
-                return find("matrix", matrixObjectId).list();
+                return find("matrix = ?1", matrixId).list();
+            } else {
+                return find("matrix = ?1 and palindrome like ?2", matrixId, "%" + q + "%").list();
             }
-
-            return find("{'matrix': ?1, 'palindrome': {$regex: ?2, $options: 'i'}}", matrixObjectId, formatQuery(q)).list();
+        } else {
+            if (q != null) {
+                return find("palindrome like ?1", "%" + q + "%").list();
+            }
         }
-
-        if (q != null) {
-            return find("{'palindrome': {$regex: ?1, $options: 'i'}}", formatQuery(q)).list();
-        }
-
         return findAll().list();
     }
 
     private String formatQuery(String q) {
         return ".*" + q + ".*";
-    }
-
-    private ObjectId getObjectId(String id) {
-        try {
-            return new ObjectId(id);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
     }
 }

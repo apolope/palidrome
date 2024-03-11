@@ -128,7 +128,7 @@ public class TestResource {
                     description = "The unique identifier of the matrix to retrieve associated palindromes.",
                     required = false,
                     example = "5fcb1234"
-            ) @QueryParam("matrixId") String matrixId
+            ) @QueryParam("matrixId") Long matrixId
     ) {
         return testService.getPalindromes(q, matrixId);
     }

@@ -1,19 +1,23 @@
 package br.com.a3sitsolutions.models;
 
 import br.com.a3sitsolutions.dtos.MatrixDTO;
-import io.quarkus.mongodb.panache.common.MongoEntity;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
+import br.com.a3sitsolutions.utils.MatrixConverter;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.bson.types.ObjectId;
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@MongoEntity(collection = "matrix")
-public class Matrix extends ReactivePanacheMongoEntity {
+@Entity
+public class Matrix extends PanacheEntityBase {
 
-    public ObjectId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Convert(converter = MatrixConverter.class)
     private List<List<Character>> matrix;
 
     public MatrixDTO of() {

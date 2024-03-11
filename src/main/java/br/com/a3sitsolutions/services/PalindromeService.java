@@ -3,7 +3,6 @@ package br.com.a3sitsolutions.services;
 import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.dtos.PalindromeDTO;
 import io.smallrye.mutiny.Uni;
-import org.bson.types.ObjectId;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ public interface PalindromeService {
      * @param matrixId The id of the matrix to retrieve associated palindromes.
      * @return A Uni that emits a list of PalindromeDTOs matching the query and matrix id.
      */
-    Uni<List<PalindromeDTO>> getPalindromes(String q, String matrixId);
+    Uni<List<PalindromeDTO>> getPalindromes(String q, Long matrixId);
 
     /**
      * Retrieves all PalindromeDTOs associated with a specific matrix ID.
@@ -35,7 +34,7 @@ public interface PalindromeService {
      * @param id The unique identifier of the matrix to retrieve associated palindromes.
      * @return A Uni that emits a list of PalindromeDTOs associated with the specified matrix ID.
      */
-    Uni<List<PalindromeDTO>> getPalindromesByMatrixId(String id);
+    Uni<List<PalindromeDTO>> getPalindromesByMatrixId(Long id);
 
     /**
      * Saves a new palindrome.
@@ -59,5 +58,5 @@ public interface PalindromeService {
      * @param matrixId The ObjectId of the matrix for which associated palindromes should be deleted.
      * @return A Uni that emits true if the deletion was successful, or fail with exception.
      */
-    Uni<Boolean> deleteByMatrixId(ObjectId matrixId);
+    Uni<Boolean> deleteByMatrixId(Long matrixId);
 }

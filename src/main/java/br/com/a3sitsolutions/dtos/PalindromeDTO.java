@@ -3,7 +3,6 @@ package br.com.a3sitsolutions.dtos;
 import br.com.a3sitsolutions.models.Palindrome;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 @Data
@@ -11,13 +10,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 public class PalindromeDTO {
 
     @Schema(description = "The unique identifier of the item.", example = "5fcb1234")
-    private ObjectId id;
+    private Long id;
 
     @Schema(description = "The palindrome.", example = "XOXO")
     private String palindrome;
 
     @Schema(description = "The unique identifier of the matrix.", example = "5fcb1234")
-    private ObjectId matrix;
+    private Long matrix;
 
     public PalindromeDTO(Palindrome palindrome) {
         this.id = palindrome.getId();

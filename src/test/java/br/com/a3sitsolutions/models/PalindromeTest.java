@@ -1,6 +1,5 @@
 package br.com.a3sitsolutions.models;
 
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,10 +8,9 @@ class PalindromeTest {
     @Test
     void getSetId() {
         Palindrome palindrome = new Palindrome();
-        ObjectId id = new ObjectId();
-        palindrome.setId(id);
+        palindrome.setId(1L);
 
-        assertEquals(id, palindrome.getId());
+        assertEquals(1L, palindrome.getId());
     }
 
     @Test
@@ -27,17 +25,16 @@ class PalindromeTest {
     @Test
     void getSetMatrix() {
         Palindrome palindrome = new Palindrome();
-        ObjectId matrixId = new ObjectId();
-        palindrome.setMatrix(matrixId);
+        palindrome.setMatrix(1L);
 
-        assertEquals(matrixId, palindrome.getMatrix());
+        assertEquals(1L, palindrome.getMatrix());
     }
 
     @Test
     void testEquals() {
         Palindrome palindrome1 = new Palindrome();
         palindrome1.setPalindrome("level");
-        palindrome1.setMatrix(new ObjectId());
+        palindrome1.setMatrix(1L);
 
         Palindrome palindrome2 = new Palindrome();
         palindrome2.setPalindrome("level");
@@ -57,7 +54,7 @@ class PalindromeTest {
     void testHashCode() {
         Palindrome palindrome = new Palindrome();
         palindrome.setPalindrome("level");
-        palindrome.setMatrix(new ObjectId());
+        palindrome.setMatrix(1L);
 
         Palindrome samePalindrome = new Palindrome();
         samePalindrome.setPalindrome("level");
@@ -70,7 +67,7 @@ class PalindromeTest {
     void testToString() {
         Palindrome palindrome = new Palindrome();
         palindrome.setPalindrome("level");
-        palindrome.setMatrix(new ObjectId());
+        palindrome.setMatrix(1L);
 
         String toStringResult = palindrome.toString();
         assertTrue(toStringResult.contains("level"));

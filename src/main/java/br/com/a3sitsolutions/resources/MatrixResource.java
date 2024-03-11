@@ -7,7 +7,6 @@ import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
@@ -159,7 +158,7 @@ public class MatrixResource {
                     description = "The unique identifier of the matrix to be retrieved.",
                     required = true,
                     example = "5fcb1234"
-            ) @PathParam("id") String id) {
+            ) @PathParam("id") Long id) {
         return service.getMatrix(id);
     }
 
@@ -213,7 +212,7 @@ public class MatrixResource {
                     description = "The unique identifier of the matrix to be updated.",
                     required = true,
                     example = "5fcb1234"
-            ) @PathParam("id") String id,
+            ) @PathParam("id") Long id,
             @Parameter(
                     description = "The new matrix content to update. Ensure to provide the complete matrix data.",
                     required = true,
@@ -226,7 +225,7 @@ public class MatrixResource {
                                     value = "{ 'data': [['A', 'B'], ['C', 'D']]}")
                     )
             ) @NotNull MatrixDTO matrixDTO) {
-        matrixDTO.setId(new ObjectId(id));
+        matrixDTO.setId(id);
         return service.saveOrUpdate(matrixDTO);
     }
 
@@ -295,7 +294,7 @@ public class MatrixResource {
                     description = "The unique identifier of the matrix to be deleted.",
                     required = true,
                     example = "5fcb1234"
-            ) @PathParam("id") String id) {
+            ) @PathParam("id") Long id) {
         return service.deleteMatrix(id);
     }
 

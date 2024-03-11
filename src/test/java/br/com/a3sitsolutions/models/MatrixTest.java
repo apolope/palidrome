@@ -1,7 +1,6 @@
 package br.com.a3sitsolutions.models;
 
 import br.com.a3sitsolutions.dtos.MatrixDTO;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,10 +21,9 @@ class MatrixTest {
     @Test
     void getSetId() {
         Matrix matrix = new Matrix();
-        ObjectId expectedId = new ObjectId();
-        matrix.setId(expectedId);
+        matrix.setId(1L);
 
-        assertEquals(expectedId, matrix.getId());
+        assertEquals(1L, matrix.getId());
     }
 
     @Test

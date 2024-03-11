@@ -12,7 +12,6 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -68,24 +67,20 @@ class MatrixServiceImplTest {
     @Test
     void getMatrixSuccess() {
         Matrix matrix = factory.matrixFactoryEntity();
-        ObjectId id = matrix.getId();
+        Mockito.when(matrixService.getMatrix(anyLong())).thenReturn(Uni.createFrom().item(matrix.of()));
 
-        Mockito.when(matrixService.getMatrix(any(String.class))).thenReturn(Uni.createFrom().item(matrix.of()));
-
-        matrixService.getMatrix(id.toString()).subscribe().with(matrixDTO -> {
+        matrixService.getMatrix(1L).subscribe().with(matrixDTO -> {
             assertNotNull(matrixDTO);
-            assertEquals(id, matrixDTO.getId());
+            assertEquals(1L, matrixDTO.getId());
             assertEquals(matrix.getMatrix(), matrixDTO.getMatrix());
         });
     }
 
     @Test
     void getMatrixFail() {
-        ObjectId id = new ObjectId();
+        Mockito.when(matrixService.getMatrix(anyLong())).thenReturn(Uni.createFrom().nullItem());
 
-        Mockito.when(matrixService.getMatrix(any(String.class))).thenReturn(Uni.createFrom().nullItem());
-
-        matrixService.getMatrix(id.toHexString()).subscribe().with(
+        matrixService.getMatrix(1L).subscribe().with(
                 matrixDTO -> fail(),
                 failure -> assertInstanceOf(NotFoundException.class, failure)
         );
@@ -93,26 +88,22 @@ class MatrixServiceImplTest {
 
     @Test
     void deleteMatrixSuccess() {
-        ObjectId matrixId = new ObjectId();
+        Mockito.when(matrixService.deleteMatrix(anyLong())).thenReturn(Uni.createFrom().item(true));
 
-        Mockito.when(matrixService.deleteMatrix(any(String.class))).thenReturn(Uni.createFrom().item(true));
+        matrixService.deleteMatrix(1L).subscribe().with(Assertions::assertTrue);
 
-        matrixService.deleteMatrix(matrixId.toString()).subscribe().with(Assertions::assertTrue);
-
-        Mockito.verify(matrixService, Mockito.times(1)).deleteMatrix(matrixId.toString());
+        Mockito.verify(matrixService, Mockito.times(1)).deleteMatrix(1L);
     }
 
     @Test
     void deleteMatrixFail() {
-        ObjectId matrixId = new ObjectId();
+        Mockito.when(matrixService.deleteMatrix(1L)).thenReturn(Uni.createFrom().item(false));
 
-        Mockito.when(matrixService.deleteMatrix(matrixId.toString())).thenReturn(Uni.createFrom().item(false));
-
-        matrixService.deleteMatrix(matrixId.toString()).subscribe().with(Assertions::assertFalse, failure -> {
+        matrixService.deleteMatrix(1L).subscribe().with(Assertions::assertFalse, failure -> {
             assertInstanceOf(NotFoundException.class, failure);
         });
 
-        Mockito.verify(matrixService, Mockito.times(1)).deleteMatrix(matrixId.toString());
+        Mockito.verify(matrixService, Mockito.times(1)).deleteMatrix(1L);
     }
 
     @Test

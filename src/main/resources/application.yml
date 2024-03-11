@@ -1,13 +1,11 @@
 quarkus:
-  mongodb:
-    database: palindrome
-    connection-string: mongodb://mongodb-palindrome:27017
 
   datasource:
-    mongodb:
-      uri: mongodb://mongodb-palindrome:27017
-      collections:
-        - palindrome
+    db-kind: postgresql
+    username: root
+    password: R3c1f3
+    reactive:
+      url: postgresql://10.10.0.253:5432/palindrome
 
   log:
     category:

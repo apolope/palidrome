@@ -4,7 +4,6 @@ import br.com.a3sitsolutions.dtos.MatrixDTO;
 import br.com.a3sitsolutions.models.Matrix;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Singleton;
-import org.bson.types.ObjectId;
 import java.util.List;
 import java.util.Random;
 
@@ -14,7 +13,7 @@ public class Factory {
     public Uni<Matrix> matrixUniFactory() {
         Matrix matrix = new Matrix();
 
-        matrix.setId(new ObjectId());
+        matrix.setId(1L);
 
         matrix.setMatrix(matrixDataFactoryValid());
 
@@ -24,7 +23,7 @@ public class Factory {
     public Matrix matrixFactoryEntity() {
         Matrix matrix = new Matrix();
 
-        matrix.setId(new ObjectId());
+        matrix.setId(1L);
         matrix.setMatrix(matrixDataFactoryValid());
 
         return matrix;
@@ -33,7 +32,7 @@ public class Factory {
     public MatrixDTO matrixFactoryDTO() {
         MatrixDTO matrix = new MatrixDTO();
 
-        matrix.setId(new ObjectId());
+        matrix.setId(1L);
         matrix.setMatrix(matrixDataFactoryValid());
 
         return matrix;

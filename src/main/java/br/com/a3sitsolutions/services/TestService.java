@@ -32,5 +32,5 @@ public interface TestService {
      * @param q The query string to search for within palindromes.
      * @return A Uni that emits a list of PalindromeDTOs matching the query.
      */
-    Uni<List<PalindromeDTO>> getPalindromes(String q, String matrixId);
+    Uni<List<PalindromeDTO>> getPalindromes(String q, Long matrixId);
 }
