@@ -38,9 +38,8 @@ public class MatrixServiceImpl implements MatrixService {
     @Override
     public Uni<List<MatrixDTO>> getMatrices() {
         return matrixRepository.listAll()
-                .onItem().ifNotNull().transform(matrices -> {
-                    return matrices.stream().map(MatrixDTO::new).collect(Collectors.toList());
-                })
+                .onItem().ifNotNull().transform(matrices -> matrices.stream().map(MatrixDTO::new)
+                        .collect(Collectors.toList()))
                 .onItem().ifNull().fail()
                 .onFailure().recoverWithUni(Uni.createFrom().item(Collections.emptyList()));
     }
@@ -48,11 +47,13 @@ public class MatrixServiceImpl implements MatrixService {
     @Override
     public Uni<MatrixDTO> saveOrUpdate(MatrixDTO matrixDTO) {
         if (!checkMatrixLength(matrixDTO)) {
-            return Uni.createFrom().failure(new SaveException(MessagesUtil.formatLengthProblemMessage(MATRIX_MIN_LENGTH, MATRIX_MAX_LENGTH)));
+            return Uni.createFrom()
+                    .failure(new SaveException(MessagesUtil.formatLengthProblemMessage(MATRIX_MIN_LENGTH, MATRIX_MAX_LENGTH)));
         }
 
         if (matrixDTO.getMatrix() != null && !checkMatrixRowLenght(matrixDTO)) {
-            return Uni.createFrom().failure(new SaveException(MessagesUtil.formatRowLengthProblemMessage(matrixDTO.getMatrix().get(0).size())));
+            return Uni.createFrom()
+                    .failure(new SaveException(MessagesUtil.formatRowLengthProblemMessage(matrixDTO.getMatrix().get(0).size())));
         }
 
         Matrix matrix = matrixDTO.toEntity();
@@ -63,17 +64,14 @@ public class MatrixServiceImpl implements MatrixService {
                     return palindromeService.savePalindromes(matrixDTO)
                             .onItem().transform(ignored -> new MatrixDTO(savedMatrix));
                 });
-//                .onFailure().recoverWithUni(failure -> Uni.createFrom().failure(new SaveException()));
     }
 
     @Override
     public Uni<MatrixDTO> getMatrix(Long id) {
 
-        Uni<MatrixDTO> matrix = matrixRepository.findByMatrixId(id)
+        return matrixRepository.findByMatrixId(id)
                 .onItem().ifNotNull().transform(MatrixDTO::new)
                 .onFailure().transform(e -> new NotFoundException(MessagesUtil.NOT_FOUND_ID, id.toString()));
-
-        return matrix;
     }
 
     @Override

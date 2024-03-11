@@ -13,7 +13,9 @@ public enum MessagesUtil {
     NOT_FOUND("not.found"),
     NOT_FOUND_ID("not.found.id"),
     ID_CONVERTER_PROBLEM("id.converter.problem"),
-    EMPTY_PALINDROME_CONTENT("empty.palindrome.content");
+    EMPTY_PALINDROME_CONTENT("empty.palindrome.content"),
+    MATRIX_CONVERT_PROBLEM("matrix.convert.problem"),
+    MATRIX_CONVERT_LIST_PROBLEM("matrix.convert.list.problem");
 
     private final String code;
 

@@ -24,9 +24,7 @@ public class TestServiceImpl implements TestService {
     @Override
     public Uni<List<PalindromeDTO>> obtainPalindromes(MatrixDTO matrixDTO) {
             return matrixService.saveOrUpdate(matrixDTO)
-                .onItem().transformToUni(savedMatrixDTO -> {
-                    return palindromeService.getPalindromesByMatrixId(savedMatrixDTO.getId());
-                });
+                .onItem().transformToUni(savedMatrixDTO -> palindromeService.getPalindromesByMatrixId(savedMatrixDTO.getId()));
     }
 
     @Override

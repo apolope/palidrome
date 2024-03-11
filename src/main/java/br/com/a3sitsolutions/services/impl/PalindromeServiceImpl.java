@@ -38,12 +38,13 @@ public class PalindromeServiceImpl implements PalindromeService {
 
         try {
             if (q != null) {
-                return repo.findPalindromesByQuery(q).onItem().transform(palindromes -> {
-                    return palindromes.stream().map(PalindromeDTO::new).collect(Collectors.toList());
-                });
+                return repo.findPalindromesByQuery(q)
+                        .onItem().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new)
+                                .collect(Collectors.toList()));
             } else {
                 return repo.listAll()
-                        .onItem().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new).collect(Collectors.toList()));
+                        .onItem().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new)
+                                .collect(Collectors.toList()));
             }
         } catch (Exception e) {
             return Uni.createFrom().failure(e);
@@ -54,7 +55,8 @@ public class PalindromeServiceImpl implements PalindromeService {
     public Uni<List<PalindromeDTO>> getPalindromes(String q, Long matrixId) {
         return repo.findPalindromesByQueryAndMatrixId(q, matrixId)
                 .onItem().ifNull().fail()
-                .onItem().ifNotNull().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new).collect(Collectors.toList()))
+                .onItem().ifNotNull().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new)
+                        .collect(Collectors.toList()))
                 .onFailure().transform(e -> new NotFoundException(MessagesUtil.NOT_FOUND_ID, matrixId.toString()));
     }
 
@@ -66,7 +68,8 @@ public class PalindromeServiceImpl implements PalindromeService {
                         return Uni.createFrom().failure(new NotFoundException(MessagesUtil.NOT_FOUND_ID, id.toString()));
                     }
                     return repo.findPalindromeByMatrixId(id)
-                            .onItem().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new).collect(Collectors.toList()));
+                            .onItem().transform(palindromes -> palindromes.stream().map(PalindromeDTO::new)
+                                    .collect(Collectors.toList()));
                 });
     }
 
@@ -84,7 +87,8 @@ public class PalindromeServiceImpl implements PalindromeService {
                                 .onItem().transform(PalindromeDTO::new)
                                 .onFailure().transform(e -> new SaveException());
                     } else {
-                        return Uni.createFrom().failure(new NotFoundException(MessagesUtil.NOT_FOUND_ID, palindrome.getMatrix().toString()));
+                        return Uni.createFrom()
+                                .failure(new NotFoundException(MessagesUtil.NOT_FOUND_ID, palindrome.getMatrix().toString()));
                     }
                 })
                 .onFailure().transform(e -> new NotFoundException(MessagesUtil.NOT_FOUND_ID, palindrome.getMatrix().toString()));
@@ -93,11 +97,13 @@ public class PalindromeServiceImpl implements PalindromeService {
     @Override
     public Uni<Void> savePalindromes(MatrixDTO matrixDTO) {
         if (!MatrixUtil.checkMatrixLength(matrixDTO, matrixService.minLength(), matrixService.maxLength())) {
-            return Uni.createFrom().failure(new SaveException(MessagesUtil.formatLengthProblemMessage(matrixService.minLength(), matrixService.maxLength())));
+            return Uni.createFrom()
+                    .failure(new SaveException(MessagesUtil.formatLengthProblemMessage(matrixService.minLength(), matrixService.maxLength())));
         }
 
         if (matrixDTO.getMatrix() != null && !MatrixUtil.checkMatrixRowLenght(matrixDTO)) {
-            return Uni.createFrom().failure(new SaveException(MessagesUtil.formatRowLengthProblemMessage(matrixDTO.getMatrix().get(0).size())));
+            return Uni.createFrom()
+                    .failure(new SaveException(MessagesUtil.formatRowLengthProblemMessage(matrixDTO.getMatrix().get(0).size())));
         }
 
         List<Uni<Void>> saveOperations = findPalindromes(matrixDTO, PALINDROME_MIN_LENGTH).stream()

@@ -15,9 +15,7 @@ public class PalindromeRepository implements PanacheRepositoryBase<Palindrome, L
             return Panache.withTransaction(() -> persist(palindrome)).replaceWith(palindrome);
         } else {
             return Panache.withTransaction(() -> findById(palindrome.getId())
-                    .onItem().ifNotNull().transform(entity -> {
-                        return entity;
-                    })
+                    .onItem().ifNotNull().transform(entity -> entity)
                     .onItem().ifNull().fail()
             );
         }
@@ -44,9 +42,5 @@ public class PalindromeRepository implements PanacheRepositoryBase<Palindrome, L
             }
         }
         return findAll().list();
-    }
-
-    private String formatQuery(String q) {
-        return ".*" + q + ".*";
     }
 }

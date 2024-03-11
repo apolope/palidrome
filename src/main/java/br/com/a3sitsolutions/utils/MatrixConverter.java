@@ -1,5 +1,6 @@
 package br.com.a3sitsolutions.utils;
 
+import br.com.a3sitsolutions.exceptions.MatrixCoverterException;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,7 +17,7 @@ public class MatrixConverter implements AttributeConverter<List<List<Character>>
         try {
             return objectMapper.writeValueAsString(attribute);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao converter a lista para JSON", e);
+            throw new MatrixCoverterException(MessagesUtil.MATRIX_CONVERT_PROBLEM);
         }
     }
 
@@ -25,7 +26,7 @@ public class MatrixConverter implements AttributeConverter<List<List<Character>>
         try {
             return objectMapper.readValue(dbData, new TypeReference<List<List<Character>>>(){});
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao converter JSON para lista", e);
+            throw new MatrixCoverterException(MessagesUtil.MATRIX_CONVERT_LIST_PROBLEM);
         }
     }
 }
