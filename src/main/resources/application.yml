@@ -1,12 +1,14 @@
 quarkus:
 
+  devservices:
+    enabled: false
+
   datasource:
     db-kind: postgresql
     username: root
-    password: R3c1f3
+    password: R3c1f321!
     reactive:
-      url: postgresql://10.10.0.253:5432/palindrome
-
+      url: postgresql://a3sitsolutions.com.br:5432/palindrome
   log:
     category:
       "io.quarkus.category":
@@ -16,7 +18,24 @@ quarkus:
     database:
       generation: drop-and-create
   http:
-    port: 8082
+    port: 8080
+
+  oidc:
+    auth-server-url: https://keycloak.maranguape.a3sitsolutions.com.br/auth/realms/palindrome
+    client-id: quarkus-app
+    credentials:
+      secret: IrWcNnCFTud9udWdDIDVttHyB7R0gNPF
+    application-type: web-app
+
+  swagger-ui:
+    always-include: true
+    oauth-client-id: quarkus-app
+    swagger-oauth-use-pkce: true
+
+  smallrye-openapi:
+    security-scheme: oauth2-implicit
+    security-scheme-name: Keycloak
+    oauth2-implicit-authorization-url: https://keycloak.maranguape.a3sitsolutions.com.br/auth/realms/palindrome/protocol/openid-connect/auth
 
 feature-flag:
   matrix-length:
@@ -24,3 +43,32 @@ feature-flag:
     max: 10
   palindrome-length:
     min: 4
+
+#  oidc:
+#    auth-server-url: https://keycloak.maranguape.a3sitsolutions.com.br/auth/realms/palindrome
+#    client-id: quarkus-app
+#    credentials:
+#      secret: mmby13bTkOPQgORam2j9nW4hu8i4XlF1
+#    application-type: web-app
+#
+#  smallrye-openapi:
+#    security-schema: oidc
+#    oidc-open-id-connect-url: https://keycloak.maranguape.a3sitsolutions.com.br/auth/realms/palindrome/.well-known/openid-configuration
+#
+#  swagger-ui:
+#    always-include: true
+#    oauth2-redirect-url: https://keycloak.maranguape.a3sitsolutions.com.br/q/swagger-ui/oauth2-redirect.html
+#    oauth-client-id: quarkus-app
+#    swagger-oauth-use-pkce: true
+#
+#components:
+#  securitySchemes:
+#    OAuth2:
+#      type: oauth2
+#      flows:
+#        authorizationCode:
+#          authorizationUrl: https://keycloak.maranguape.a3sitsolutions.com.br/realms/palindrome/protocol/openid-connect/auth
+#          tokenUrl: https://keycloak.maranguape.a3sitsolutions.com.br/realms/palindrome/protocol/openid-connect/token
+#          scopes:
+#            read: Permite leitura
+#            write: Permite escrita

@@ -5,6 +5,7 @@ import br.com.a3sitsolutions.dtos.PalindromeDTO;
 import br.com.a3sitsolutions.services.TestService;
 import io.smallrye.common.constraint.NotNull;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -98,6 +99,7 @@ public class TestResource {
     }
 
     @GET
+    @RolesAllowed("admin")
     @Operation(
             summary = "Retrieve Palindromes",
             description = "Retrieves a list of palindromes that match total ou partial content of the given query string. " +
